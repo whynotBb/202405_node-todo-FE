@@ -6,35 +6,33 @@ import api from '../utils/api';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
-    const goToLogin = () => {
-        navigate('/login');
-    };
-    const [name, setName] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [password2nd, setPassword2nd] = useState();
-    const signIn = async (e) => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [password2nd, setPassword2nd] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password === password2nd) {
-            try {
-                const response = await api.post('/user', {
-                    name: name,
-                    email: email,
-                    password: password,
-                });
-                if (response.status === 200) {
-                    goToLogin();
-                }
-            } catch (error) {
-                console.log('error : ', error);
+        try {
+            if (password !== password2nd) {
+                throw new Error('패스워드가 일치하지 않습니다. 다시 입력해주세요.');
             }
-        } else {
-            console.log('password fail');
+            const response = await api.post('/user', {name, email, password});
+            console.log('res-', response);
+            if (response.status === 200) {
+                navigate('/login');
+            } else {
+                throw new Error(response.data.error);
+            }
+        } catch (error) {
+            setError(error.message);
         }
     };
     return (
         <div className='display-center'>
-            <Form className='login-box' onSubmit={signIn}>
+            {error && <div>{error}</div>}
+            <Form className='login-box' onSubmit={handleSubmit}>
                 <h1>회원가입</h1>
                 <Form.Group className='mb-3' controlId='formName'>
                     <Form.Label>Name</Form.Label>
