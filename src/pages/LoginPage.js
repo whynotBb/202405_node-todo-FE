@@ -1,56 +1,67 @@
-import React, {useState} from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import React, { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
-import {Link, useNavigate} from 'react-router-dom';
-import api from '../utils/api';
+import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errorMsg, setErrorMsg] = useState('');
-    const handleSubmit = async (e) => {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const [user, setUser] = useState(null);
+    const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('/user/login', {email, password});
-            console.log('res-', response);
+            const response = await api.post("/user/login", { email, password });
+            console.log("res-", response);
             if (response.status === 200) {
                 console.log(response);
-                setUser(response.data);
-                // navigate('/');
+                setUser(response.data.user);
+                //sessionStorage 에 token 저장
+                sessionStorage.setItem("token", response.data.token);
+                api.defaults.headers["authorization"] =
+                    "Bearer " + response.data.token;
+                setErrorMsg("");
+                navigate("/");
             } else {
-                throw new Error('아이디 또는 패스워드가 일치하지 않습니다. 다시 입력해주세요.');
+                throw new Error(response.message);
             }
         } catch (error) {
-            setErrorMsg('아이디 또는 패스워드가 일치하지 않습니다. 다시 입력해주세요.');
+            setErrorMsg(error.message);
         }
     };
+
     return (
-        <div className='display-center'>
+        <div className="display-center">
             {errorMsg && <div>{errorMsg}</div>}
-            <Form className='login-box' onSubmit={handleSubmit}>
+            <Form className="login-box" onSubmit={handleLogin}>
                 <h1>로그인</h1>
-                <Form.Group className='mb-3' controlId='formBasicEmail'>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type='email' placeholder='Enter email' onChange={(e) => setEmail(e.target.value)} />
+                    <Form.Control
+                        type="email"
+                        placeholder="Enter email"
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
                 </Form.Group>
 
-                <Form.Group className='mb-3' controlId='formBasicPassword'>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
-                        type='password'
-                        placeholder='Password'
+                        type="password"
+                        placeholder="Password"
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <div className='button-box'>
-                    <Button type='submit' className='button-primary'>
+                <div className="button-box">
+                    <Button type="submit" className="button-primary">
                         Login
                     </Button>
                     <span>
-                        계정이 없다면? <Link to='/register'>회원가입 하기</Link>
+                        계정이 없다면? <Link to="/register">회원가입 하기</Link>
                     </span>
                 </div>
             </Form>
