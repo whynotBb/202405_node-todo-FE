@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+// 배포 시 baseURL proxy 로 바꿔주기
 const api = axios.create({
     baseURL: `${process.env.REACT_APP_BACKEND_URL}/api`,
     // baseURL: `${process.env.REACT_APP_BACKEND_PROXY}/api`,
