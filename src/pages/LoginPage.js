@@ -2,16 +2,16 @@ import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, Navigate, useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 
-const LoginPage = () => {
+const LoginPage = ({user, setUser}) => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -33,6 +33,9 @@ const LoginPage = () => {
             setErrorMsg(error.message);
         }
     };
+    if (user) {
+        return <Navigate to='/' />;
+    }
 
     return (
         <div className='display-center'>

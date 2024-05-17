@@ -5,18 +5,28 @@ import LoginPage from './pages/LoginPage';
 import TodoPage from './pages/TodoPage';
 import RegisterPage from './pages/RegisterPage';
 import PrivateRoute from './route/PrivateRoute';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import api from './utils/api';
 import TestPage from './pages/TestPage';
 
 function App() {
     const [user, setUser] = useState(null);
+    // 토큰을 통해 유저정보를 가져온다. getUser
     const getUser = async () => {
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await api.get('');
-        } catch (error) {}
+            const storedToken = sessionStorage.getItem('token');
+            if (storedToken) {
+                const response = await api.get('/user/me');
+                console.log('getUser = ', response.data.user);
+                setUser(response.data.user);
+            }
+        } catch (error) {
+            setUser(null);
+        }
     };
+    useEffect(() => {
+        getUser();
+    }, []);
     return (
         <Routes>
             <Route
@@ -29,7 +39,7 @@ function App() {
             />
 
             <Route path='/register' element={<RegisterPage />} />
-            <Route path='/login' element={<LoginPage />} />
+            <Route path='/login' element={<LoginPage user={user} setUser={setUser} />} />
             <Route path='/test' element={<TestPage />} />
         </Routes>
     );
