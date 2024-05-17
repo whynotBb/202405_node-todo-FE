@@ -5,7 +5,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
-const TodoPage = () => {
+const TodoPage = ({user}) => {
+    console.log('todo user', user);
     const [todoList, setTodoList] = useState([]);
     const [todoValue, setTodoValue] = useState('');
 
@@ -21,6 +22,7 @@ const TodoPage = () => {
             const response = await api.post('/tasks', {
                 task: todoValue,
                 isComplete: false,
+                author: user._id,
             });
             if (response.status === 200) {
                 getTasks();

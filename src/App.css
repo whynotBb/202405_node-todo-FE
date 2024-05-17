@@ -86,6 +86,9 @@ button {
     color: #ffffff;
     border: none;
 }
+.name {
+    font-size: 14px;
+}
 .testBox {
     width: 100vw;
     height: 600px;
