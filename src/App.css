@@ -86,3 +86,21 @@ button {
     color: #ffffff;
     border: none;
 }
+.testBox {
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    position: relative;
+}
+.testBox img {
+    width: 900px;
+    height: 600px;
+}
+.testBox .nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 900px;
+    display: flex;
+    justify-content: space-between;
+}
