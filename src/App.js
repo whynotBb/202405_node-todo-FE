@@ -1,23 +1,23 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import {Routes, Route} from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import TodoPage from './pages/TodoPage';
-import RegisterPage from './pages/RegisterPage';
-import PrivateRoute from './route/PrivateRoute';
-import {useEffect, useState} from 'react';
-import api from './utils/api';
-import TestPage from './pages/TestPage';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import TodoPage from "./pages/TodoPage";
+import RegisterPage from "./pages/RegisterPage";
+import PrivateRoute from "./route/PrivateRoute";
+import { useEffect, useState } from "react";
+import api from "./utils/api";
+import TestPage from "./pages/TestPage";
 
 function App() {
     const [user, setUser] = useState(null);
     // 토큰을 통해 유저정보를 가져온다. getUser
     const getUser = async () => {
         try {
-            const storedToken = sessionStorage.getItem('token');
+            const storedToken = sessionStorage.getItem("token");
             if (storedToken) {
-                const response = await api.get('/user/me');
-                console.log('getUser = ', response.data.user);
+                const response = await api.get("/user/me");
+                console.log("getUser = ", response.data.user);
                 setUser(response.data.user);
             }
         } catch (error) {
@@ -30,17 +30,20 @@ function App() {
     return (
         <Routes>
             <Route
-                path='/'
+                path="/"
                 element={
                     <PrivateRoute user={user}>
-                        <TodoPage user={user} />
+                        <TodoPage user={user} setUser={setUser} />
                     </PrivateRoute>
                 }
             />
 
-            <Route path='/register' element={<RegisterPage />} />
-            <Route path='/login' element={<LoginPage user={user} setUser={setUser} />} />
-            <Route path='/test' element={<TestPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route
+                path="/login"
+                element={<LoginPage user={user} setUser={setUser} />}
+            />
+            <Route path="/test" element={<TestPage />} />
         </Routes>
     );
 }

@@ -89,6 +89,15 @@ button {
 .name {
     font-size: 14px;
 }
+.logout {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+.logout span {
+    cursor: pointer;
+    font-weight: bold;
+}
 .testBox {
     width: 100vw;
     height: 600px;
